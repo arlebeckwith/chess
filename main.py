@@ -101,13 +101,13 @@ class chess:
                         else:
                             return False
                 else:
-                    print("Almost landed on your own piece there.")
+                    #print("Almost landed on your own piece there.")
                     return False
             else:
-                print("Only move your own pieces next time buddy.")
+                #print("Only move your own pieces next time buddy.")
                 return False
         else:
-            print("Out of range.")
+            #print("Out of range.")
             return False
 
     def isCheck(self, isx, isy):
@@ -132,6 +132,7 @@ class chess:
     def run(self):
         self.print()
         while True:
+            sleep(.1)
             move = self.readmove()
             if move:
                 fx = move[0]
@@ -143,8 +144,8 @@ class chess:
                     self.board[fx][fy] = '#'
                     print("turn:", self.turn)
                     self.print()
-                    self.store()
                     sleep(10)
-                self.changeTurn()
+                    self.changeTurn()
+                self.store()
 game = chess()
 game.run()
