@@ -121,20 +121,30 @@ class chess:
     def searchistory(self):
         pass
 
+    def readmove(self):
+        with open('board.txt','r') as file:
+            string = file.read().split('\n')[0]
+            if string == 'b' or string == 'W':
+                return False
+            else:
+                return [int(a) for a in list(string)]
+
     def run(self):
         self.print()
         while True:
-            print("turn:", self.turn)
-            fx = int(random.randint(0,7))
-            fy = int(random.randint(0,7))
-            tx = int(random.randint(0,7))
-            ty = int(random.randint(0,7))
-            if self.regulate(fx,fy,tx,ty):
-                self.board[tx][ty] = self.board[fx][fy]
-                self.board[fx][fy] = '#'
-                self.print()
-                self.store()
-                sleep(10)
-            self.changeTurn()
+            move = self.readmove()
+            if move:
+                fx = move[0]
+                fy = move[1]
+                tx = move[2]
+                ty = move[3]
+                if self.regulate(fx,fy,tx,ty):
+                    self.board[tx][ty] = self.board[fx][fy]
+                    self.board[fx][fy] = '#'
+                    print("turn:", self.turn)
+                    self.print()
+                    self.store()
+                    sleep(10)
+                self.changeTurn()
 game = chess()
 game.run()
