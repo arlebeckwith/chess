@@ -121,15 +121,17 @@ class chess:
 
     def run(self):
         while True:
-            print("turn:", self.turn)
             self.print()
-            fx = int(input("From y:"))
-            fy = int(input("From x:"))
-            tx = int(input("To y:"))
-            ty = int(input("To x:"))
+            print("turn:", self.turn)
+            fx = int(random.randint(0,7))
+            fy = int(random.randint(0,7))
+            tx = int(random.randint(0,7))
+            ty = int(random.randint(0,7))
             if self.regulate(fx,fy,tx,ty):
+                self.print()
                 self.board[tx][ty] = self.board[fx][fy]
                 self.board[fx][fy] = '#'
+
             self.changeTurn()
 game = chess()
 game.run()
