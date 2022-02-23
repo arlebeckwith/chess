@@ -8,7 +8,7 @@ class chess:
                       ["#","#","#","#","#","#","#","#"],
                       ["P","P","P","P","P","P","P","P"],
                       ["R","N","B","Q","K","B","N","R"]]
-        self.turn = 'w'
+        self.turn = 'W'
 
     def print(self):
         print("  01234567",sep='',end='\n')
@@ -24,12 +24,12 @@ class chess:
             file.write(str(self.board))
 
     def changeTurn(self):
-        if self.turn == 'w':
+        if self.turn == 'W':
             self.turn = 'b'
         else:
-            self.turn = 'w'
+            self.turn = 'W'
 
-    def regulate(self,fx,fy,tx,ty):
+    def regulate(self,fx,fy,tx,ty, checkplayer = True):
         if (fx <= 7 and fx >= 0) and (fy <= 7 and fy >= 0) and (tx <= 7 and tx >= 0) and (ty <= 7 and ty >= 0): # checks if plays are in bounds
             fpiece = self.board[fx][fy]
             tpiece = self.board[tx][ty]
@@ -60,13 +60,13 @@ class chess:
 
 
 
-            if (self.turn == 'b' and fpiece.islower()) or (self.turn == 'w' and fpiece.isupper()): #checks right player is moving
+            if not checkplayer or (((self.turn == 'b' and (fpiece.islower())) or (self.turn == 'W' and fpiece.isupper()))): #checks right player is moving
                 if (fpiece.islower() != tpiece.islower()) or tpiece == '#': #checks move isnt onto own piece
                     if fpiece.lower() == 'p':
                         if (fpiece.islower() and tx > fx) or (fpiece.isupper() and tx < fx): #checks moving forward
                             if (abs(fx-tx) == 1) and (abs(fy-ty) == 1) and (tpiece != '#'): #checks if attack
                                 return True
-                            elif (abs(fx-tx) == 1 and tpiece == '#') or (abs(fx-tx) == 2 and (fx == 1 or fx == 6) and tpiece == '#'): #checks if moving forward
+                            elif (abs(fx-tx) == 1 and tpiece == '#' and fy == ty) or (abs(fx-tx) == 2 and (fx == 1 or fx == 6) and tpiece == '#'): #checks if moving forward
                                 return True
                             else:
                                 return False
@@ -94,7 +94,7 @@ class chess:
                         else:
                             return False
                     elif fpiece.lower() == 'k':
-                        if abs(fx-tx) < 2 and abs(fy-ty) < 2 and not self.ischeck(tx, ty):
+                        if abs(fx-tx) < 2 and abs(fy-ty) < 2 and not self.isCheck(tx, ty):
                             return True
                         else:
                             return False
@@ -108,8 +108,13 @@ class chess:
             print("Out of range.")
             return False
 
-    def isCheck(self, x, y):
-        pass #scan board and see if king is in check: use regulate to route every piece to king
+    def isCheck(self, isx, isy):
+        for ypos, y in enumerate(self.board):
+            for xpos, x in enumerate(y):
+                if x != '#' and (x.islower() != self.turn.islower()):
+                    if self.regulate(ypos, xpos, isy, isx, False):
+                        return True
+        return False
 
     def searchistory(self):
         pass
@@ -118,10 +123,10 @@ class chess:
         while True:
             print("turn:", self.turn)
             self.print()
-            fx = int(input("From x:"))
-            fy = int(input("From y:"))
-            tx = int(input("To x:"))
-            ty = int(input("To y:"))
+            fx = int(input("From y:"))
+            fy = int(input("From x:"))
+            tx = int(input("To y:"))
+            ty = int(input("To x:"))
             if self.regulate(fx,fy,tx,ty):
                 self.board[tx][ty] = self.board[fx][fy]
                 self.board[fx][fy] = '#'
