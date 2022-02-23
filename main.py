@@ -1,3 +1,5 @@
+import random
+from time import sleep
 class chess:
     def __init__(self):
         self.board = [["r","n","b","q","k","b","n","r"],
@@ -20,7 +22,7 @@ class chess:
 
     def store(self):
         with open("board.txt","w") as file:
-            file.write(self.turn)
+            file.write(self.turn+'\n')
             file.write(str(self.board))
 
     def changeTurn(self):
@@ -66,7 +68,7 @@ class chess:
                         if (fpiece.islower() and tx > fx) or (fpiece.isupper() and tx < fx): #checks moving forward
                             if (abs(fx-tx) == 1) and (abs(fy-ty) == 1) and (tpiece != '#'): #checks if attack
                                 return True
-                            elif (abs(fx-tx) == 1 and tpiece == '#' and fy == ty) or (abs(fx-tx) == 2 and (fx == 1 or fx == 6) and tpiece == '#'): #checks if moving forward
+                            elif (abs(fx-tx) == 1 and tpiece == '#' and fy == ty) or (abs(fx-tx) == 2 and (fx == 1 or fx == 6) and tpiece == '#' and fy == ty): #checks if moving forward
                                 return True
                             else:
                                 return False
@@ -120,18 +122,19 @@ class chess:
         pass
 
     def run(self):
+        self.print()
         while True:
-            self.print()
             print("turn:", self.turn)
             fx = int(random.randint(0,7))
             fy = int(random.randint(0,7))
             tx = int(random.randint(0,7))
             ty = int(random.randint(0,7))
             if self.regulate(fx,fy,tx,ty):
-                self.print()
                 self.board[tx][ty] = self.board[fx][fy]
                 self.board[fx][fy] = '#'
-
+                self.print()
+                self.store()
+                sleep(10)
             self.changeTurn()
 game = chess()
 game.run()
